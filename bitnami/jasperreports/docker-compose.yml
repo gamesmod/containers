@@ -1,14 +1,16 @@
 version: '2'
 services:
-  mariadb:
-    image: docker.io/bitnami/mariadb:10.6
-    volumes:
-      - 'mariadb_data:/bitnami/mariadb'
+  postgresdb:
+    image: docker.io/bitnami/postgresql:15
     environment:
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - POSTGRESQL_USERNAME=bn_jasperreports
+      - POSTGRESQL_PASSWORD=bn_jasperreports
+      - POSTGRESQL_DATABASE=bitnami_jasperreports
       - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_jasperreports
-      - MARIADB_DATABASE=bitnami_jasperreports
+    ports:
+      - '5432'
+    volumes:
+      - 'postgresqldb_data:/bitnami/postgresql'
   jasperreports:
     image: docker.io/bitnami/jasperreports:8
     ports:
@@ -16,16 +18,16 @@ services:
     volumes:
       - 'jasperreports_data:/bitnami/jasperreports'
     depends_on:
-      - mariadb
+      - postgresdb
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - ALLOW_EMPTY_PASSWORD=yes
-      - JASPERREPORTS_DATABASE_HOST=mariadb
-      - JASPERREPORTS_DATABASE_PORT_NUMBER=3306
+      - JASPERREPORTS_DATABASE_HOST=postgres
+      - JASPERREPORTS_DATABASE_PORT_NUMBER=5432
       - JASPERREPORTS_DATABASE_USER=bn_jasperreports
       - JASPERREPORTS_DATABASE_NAME=bitnami_jasperreports
 volumes:
-  mariadb_data:
-    driver: local
   jasperreports_data:
+    driver: local
+  postgresqldb_data:
     driver: local
