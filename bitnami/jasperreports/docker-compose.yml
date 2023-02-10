@@ -1,7 +1,7 @@
 version: '2'
 services:
   postgresdb:
-    image: docker.io/bitnami/postgresql:15
+    image: docker.io/bitnami/postgresql:latest
     environment:
       - POSTGRESQL_USERNAME=bn_jasperreports
       - POSTGRESQL_DATABASE=bitnami_jasperreports
@@ -11,7 +11,7 @@ services:
     volumes:
       - 'postgresqldb_data:/bitnami/postgresql'
   jasperreports:
-    image: docker.io/bitnami/jasperreports:8
+    image: docker.io/bitnami/jasperreports:latest
     ports:
       - '80:8080'
     volumes:
@@ -21,6 +21,7 @@ services:
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - ALLOW_EMPTY_PASSWORD=yes
+      - JASPERREPORTS_DATABASE_TYPE=postgresql
       - JASPERREPORTS_DATABASE_HOST=postgresdb
       - JASPERREPORTS_DATABASE_PORT_NUMBER=5432
       - JASPERREPORTS_DATABASE_USER=bn_jasperreports
